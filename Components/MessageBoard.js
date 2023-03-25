@@ -56,6 +56,14 @@ const MessageBoard = ({navigation, route}) => {
     });
   };
 
+  const handleLike = responseID => {
+    db_operations.updateResponseLikeCount(promptID, responseID, true);
+  };
+
+  const handleDislike = responseID => {
+    db_operations.updateResponseLikeCount(promptID, responseID, false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

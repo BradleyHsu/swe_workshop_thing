@@ -6,6 +6,7 @@ import {
   child,
   get,
   update,
+  transaction,
 } from 'firebase/database';
 import {app} from './src/firebase/config';
 /* 
@@ -50,7 +51,7 @@ function setPrompt(text) {
 }
 
 function setUsername(username, userCredential) {
-  const user = userCredential.user;
+  const user = userCredential.user; //need to make sure you cant have duplicate usernames
   set(ref(db, `users/${user.uid}`), {
     username: username,
     email: user.email,
@@ -151,22 +152,11 @@ function getComments(responseID) {
 }
 
 function respondToPrompt(userID, text, promptID) {
-  //add commentID to prompt responses
-  //add comment to comments
-  // promptID = getPromptID();
-  // const comments_list = ref(db, 'comments/' + promptID);
-  // const new_comment = push(comments_list);
-  // push(comments_list, {
-  //   text: text,
-  //   commentID: commentID,
-  //   userID: userID,
-  //   responses: [],
-  // });
-
   const responsesRef = ref(db, `responses/${promptID}`);
   const newResponse = push(responsesRef, {
     text: text,
     userID: userID,
+    likeCount: 0,
     comments: [],
   });
   const responseID = newResponse.key;
@@ -175,15 +165,21 @@ function respondToPrompt(userID, text, promptID) {
 }
 
 function replyToResponse(userID, text, responseID) {
-  //add commentID to comment responses
-  //add comment to comments
   const commentRef = ref(db, `comments/${responseID}`);
   const newComment = push(commentRef, {
     text: text,
     userID: userID,
+    likeCount: 0,
   });
   const commentID = newComment.key;
   update(newComment, {commentID: commentID});
+}
+
+function updateResponseLikeCount(promptID, responseID, isLike) {
+  const likeCountRef = ref(db, `responses/${promptID}/${responseID}/likeCount`);
+  transaction(likeCountRef, curVal => {
+    return (curVal || 0) + isLike;
+  });
 }
 
 /* real-time listening 
@@ -202,4 +198,5 @@ export {
   getResponses,
   getComments,
   replyToResponse,
+  updateResponseLikeCount,
 };
