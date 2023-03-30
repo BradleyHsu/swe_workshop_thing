@@ -86,6 +86,11 @@ function getUsername(email) {
   });
 }
 
+function promptsRef() {
+  console.debug("promptsRef")
+  return ref(db, 'prompt/prompts');
+}
+
 function getPrompt() {
   console.debug("getPrompt called")
   return new Promise((resolve, reject) => {
@@ -393,5 +398,6 @@ export {
   getLikes,
   getKarma,
   incrementKarma,
-  decrementKarma
+  decrementKarma,
+  promptsRef
 };

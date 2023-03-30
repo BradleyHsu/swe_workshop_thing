@@ -9,6 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as db_operations from '../db_operations.js';
+import {
+  getDatabase,
+  ref,
+} from 'firebase/database';
+import {app} from '../src/firebase/config';
+
 
 const MessageBoard = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
@@ -18,9 +24,7 @@ const MessageBoard = ({ navigation, route }) => {
   const [promptID, setPromptID] = useState('');
   const SORTBYTOP = 0
   const SORTBYNEW = 1
-  const SORTBYLOCATION = 2
-  const SORTBYOLD = 3
-  const [sortType, setSortType] = useState(SORTBYTOP)
+  const SORTBYOLD = 2
   const { username } = route.params;
   useEffect(() => {
     db_operations.getPrompt().then(prompt => {
@@ -37,6 +41,30 @@ const MessageBoard = ({ navigation, route }) => {
        setLikedResponseIDs(likedMessages)
       });
     });
+    const db = getDatabase(app);
+    const promptsRef = ref(db, 'prompt/prompts');
+
+    console.log(promptsRef)
+    promptsRef.on('child_added', (snapshot, prevChildKey) => {
+      db_operations.getPrompt().then(prompt => {
+        if ([prompt.text, prompt.promptID].includes(undefined)) {
+          console.error("got undefined in useEffect")
+        }
+        setPromptText(prompt.text);
+        setPromptID(prompt.promptID);
+
+        db_operations.getResponses(prompt.promptID).then(messages => {
+          setMessages(messages);
+        });
+        db_operations.getLikedMessages(username).then(likedMessages =>{
+        setLikedResponseIDs(likedMessages)
+        });
+      });
+    });
+
+    return () => {
+      promptsRef.off('child_added')
+    }
   }, []);
 
   const getCompareFunc = (sortType) => {
@@ -166,6 +194,9 @@ const MessageBoard = ({ navigation, route }) => {
       <Button onPress = {
         () => handleSort(SORTBYOLD)
       } title = "Old" />
+      <Button onPress = {
+        () => db_operations.setPrompt(Date.now().toString() + " new prompt" )
+      } title = "send new prompt" />
       <ScrollView style={styles.scrollView}>
         <View style={styles.messageContainer}>
           {messages.map((message, index) => (
