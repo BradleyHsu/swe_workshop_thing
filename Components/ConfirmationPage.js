@@ -68,7 +68,7 @@ const ConfirmationPage = ({ navigation, route }) => {
           <Text style={styles.message}>This is a great message...</Text>
         </View>
         <View style={styles.addedIconContainer2}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home Page')}>
+          <TouchableOpacity onPress={() => navigation.navigate('MessageBoard')}>
             <Image
               style={styles.addedIcon2}
               source={require('../assets/icons/send_icon.png')}
