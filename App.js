@@ -12,10 +12,7 @@ import ResetPasswordScreen from './Components/ResetPasswordScreen';
 import SuccessSignUp from './Components/SuccessSignUp';
 import SuccessResetPassword from './Components/SuccessResetPassword';
 import ProfilePage from './Components/ProfilePage';
-import CommentPage from './Components/CommentPage';
-import ChatPage from './Components/ChatPage';
-import ConfirmationPage from './Components/ConfirmationPage';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { decode, encode } from 'base-64';
 
 if (!global.btoa) {
@@ -29,10 +26,10 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const MessageBoardStack = createNativeStackNavigator();
 
-function MessageBoardTabStack({ route: { params } }) {
-  return (
+function MessageBoardTabStack({route: {params}}){
+  return(
     <MessageBoardStack.Navigator>
-      <MessageBoardStack.Screen name="MessageBoard" component={MessageBoard} initialParams={params} options={{ headerShown: false }} />
+      <MessageBoardStack.Screen name="MessageBoard" component={MessageBoard} initialParams={params} options={{ headerShown: false }}/>
       <MessageBoardStack.Screen name="ReplyScreen" component={ReplyScreen} initialParams={params} />
     </MessageBoardStack.Navigator>
   )
@@ -80,21 +77,18 @@ function MessageBoardTabs({ route: { params } }) {
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initalRouteName="Home">
-        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Sign up" component={Signup} options={{ headerShown: false }} />
-        <Stack.Screen name="MessageBoard" component={MessageBoardTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Chat" component={ChatPage} options={{ headerShown: false }} />
-        <Stack.Screen name="CommentPage" component={CommentPage} options={{ headerShown: false }} />
-        <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="SuccessSignUp" component={SuccessSignUp} options={{ headerShown: false }} />
-        <Stack.Screen name="ConfirmationPage" component={ConfirmationPage} options={{ headerShown: false }} />
-        <Stack.Screen name="SuccessResetPassword" component={SuccessResetPassword} options={{ headerShown: false }} />
-      </Stack.Navigator>
+
+        <Stack.Navigator initalRouteName="Home">
+          <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Sign up" component={Signup} options={{ headerShown: false }} />
+          <Stack.Screen name="MessageBoard" component={MessageBoardTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="SuccessSignUp" component={SuccessSignUp} options={{ headerShown: false }} />
+          <Stack.Screen name="SuccessResetPassword" component={SuccessResetPassword} options={{ headerShown: false }} />
+        </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default App
-

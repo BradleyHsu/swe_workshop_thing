@@ -412,6 +412,25 @@
 				7A648E56BC6C4BE2B050D2F9 /* Roboto-Regular.ttf in Resources */,
 				B8432EA60CC34A78A9C392B1 /* Roboto-Thin.ttf in Resources */,
 				1CC3A2C691D54431B46EC112 /* Roboto-ThinItalic.ttf in Resources */,
+<<<<<<< HEAD
+=======
+				59D4FED4223D48B89288698F /* AntDesign.ttf in Resources */,
+				6644AD64638C43B9BC63BB5C /* Entypo.ttf in Resources */,
+				96384CA0F0764EF8B1C1294C /* EvilIcons.ttf in Resources */,
+				5DC96EB793884E28ACAE8D9F /* Feather.ttf in Resources */,
+				05E07D43F89046E990D88478 /* FontAwesome.ttf in Resources */,
+				52C5ACD6674C43029833454E /* FontAwesome5_Brands.ttf in Resources */,
+				C6E8B3EAF2C041C0BF87B7B9 /* FontAwesome5_Regular.ttf in Resources */,
+				30C237BD61F4469F851F9420 /* FontAwesome5_Solid.ttf in Resources */,
+				82C23210FFF74C909D0F7F61 /* Fontisto.ttf in Resources */,
+				6AF2B37C33834414A8B669C9 /* Foundation.ttf in Resources */,
+				203C8058737946188EBC194F /* Ionicons.ttf in Resources */,
+				B2BFFA2AAE7447CEA8223767 /* MaterialCommunityIcons.ttf in Resources */,
+				E8A5C8E2CE7B44DD9FFDFCE9 /* MaterialIcons.ttf in Resources */,
+				B57D695E48FD496C86515F54 /* Octicons.ttf in Resources */,
+				6E1408B11CDE463FBD3157F0 /* SimpleLineIcons.ttf in Resources */,
+				909CE8AB1ED54FCA853A65A9 /* Zocial.ttf in Resources */,
+>>>>>>> master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
