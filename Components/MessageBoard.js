@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as db_operations from '../db_operations.js';
-<<<<<<< HEAD
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { Dropdown } from 'react-native-material-dropdown';
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -39,8 +38,6 @@ const theme = createTheme({
   },
   mode: 'light',
 });
-=======
->>>>>>> master
 
 const MessageBoard = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
@@ -54,7 +51,6 @@ const MessageBoard = ({ navigation, route }) => {
   const SORTBYOLD = 3
   const [sortType, setSortType] = useState(SORTBYTOP)
   const { username } = route.params;
-<<<<<<< HEAD
   const [selected, setSelected] = React.useState("");
 
   const data1 = [
@@ -69,8 +65,6 @@ const MessageBoard = ({ navigation, route }) => {
   ]
 
 
-=======
->>>>>>> master
   useEffect(() => {
     db_operations.getPrompt().then(prompt => {
       if ([prompt.text, prompt.promptID].includes(undefined)) {
@@ -82,20 +76,20 @@ const MessageBoard = ({ navigation, route }) => {
       db_operations.getResponses(prompt.promptID).then(messages => {
         setMessages(messages);
       });
-      db_operations.getLikedMessages(username).then(likedMessages =>{
-       setLikedResponseIDs(likedMessages)
+      db_operations.getLikedMessages(username).then(likedMessages => {
+        setLikedResponseIDs(likedMessages)
       });
     });
   }, []);
 
   const getCompareFunc = (sortType) => {
     if (sortType === SORTBYTOP) {
-      return (message_a, message_b) => { 
+      return (message_a, message_b) => {
         if (message_a.likeCount < message_b.likeCount) {
           return 1
         } else if (message_a.likeCount < message_b.likeCount) {
           return -1
-        } else { 
+        } else {
           return 0
         }
       }
@@ -129,7 +123,7 @@ const MessageBoard = ({ navigation, route }) => {
     new_messages.sort(compare)
     console.log(messages)
     setMessages(new_messages)
-    
+
   }
 
   const handleSend = async () => {
@@ -152,7 +146,7 @@ const MessageBoard = ({ navigation, route }) => {
   const handleLike = async (username, posterUsername, promptID, responseID) => {
     console.debug(likedResponseIDs)
     const newLikedResponseIDs = await db_operations.handleLike(username, posterUsername, promptID, responseID)
-    console.debug('liked responmes',newLikedResponseIDs)
+    console.debug('liked responmes', newLikedResponseIDs)
     setLikedResponseIDs(newLikedResponseIDs);
     db_operations.getResponses(promptID).then(messages => {
       setMessages(messages);
@@ -160,8 +154,8 @@ const MessageBoard = ({ navigation, route }) => {
   };
   const handleDislike = async (username, posterUsername, promptID, responseID) => {
     console.debug(likedResponseIDs)
-    const newLikedResponseIDs = await db_operations.handleDislike(username, posterUsername,promptID, responseID)
-    console.debug('disliked responmes',newLikedResponseIDs)
+    const newLikedResponseIDs = await db_operations.handleDislike(username, posterUsername, promptID, responseID)
+    console.debug('disliked responmes', newLikedResponseIDs)
     setLikedResponseIDs(newLikedResponseIDs);
     db_operations.getResponses(promptID).then(messages => {
       setMessages(messages);
@@ -171,7 +165,7 @@ const MessageBoard = ({ navigation, route }) => {
   const handleLongPress = async (username, posterUsername, promptID, responseID) => {
     if ([username, posterUsername, promptID, responseID].includes(undefined)) {
       console.error(`got undefined in handleLongPress: username: ${username}, posterUsername: ${posterUsername}, promptID: ${promptID}, responseID: ${responseID}`)
-      
+
     }
     console.debug(`handlelongpress: ${username}, posterUsername: ${posterUsername}, promptID: ${promptID}, responseID: ${responseID}`)
     if (likedResponseIDs.includes(responseID)) {
@@ -180,7 +174,7 @@ const MessageBoard = ({ navigation, route }) => {
       await handleLike(username, posterUsername, promptID, responseID)
     }
   }
-  
+
   const handleReply = (responseText, responseID, userID) => {
     if ([responseText, responseID, userID].includes(undefined)) {
       console.error("got undefined in handleReply")
@@ -197,11 +191,10 @@ const MessageBoard = ({ navigation, route }) => {
   };
 
   const getLikes = async (responseID) => {
-    return await db_operations.getLikes(promptID,responseID)
+    return await db_operations.getLikes(promptID, responseID)
   }
 
   return (
-<<<<<<< HEAD
     <ThemeProvider>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
@@ -335,72 +328,8 @@ const MessageBoard = ({ navigation, route }) => {
           />
           <Button title="Post" onPress={handleSend} />
         </View> */}
-=======
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.qotd}>Question of the Day: </Text>
-        <Text style={styles.logo}>{promptText}</Text>
       </View>
-      <Button onPress = {
-        () => handleSort(SORTBYTOP)
-      } title = "Top" />
-      <Button onPress = {
-        () => handleSort(SORTBYNEW)
-      } title = "New" />
-      <Button onPress = {
-        () => handleSort(SORTBYOLD)
-      } title = "Old" />
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.messageContainer}>
-          {messages.map((message, index) => (
-            <View key={index}
-            style={[
-              styles.message,
-              likedResponseIDs != undefined && likedResponseIDs.includes(message.responseID) && styles.likedMessage,
-            ]}>
-              <TouchableOpacity
-                onLongPress={() => {
-                  handleLongPress(username, message.userID, promptID, message.responseID)
-                  }
-                }
-                onPress={() => {
-                    handleReply(message.text, message.responseID, message.userID)
-                  }
-                }>
-                <Text style={styles.username} onPress={
-                  () => {
-                    if(message.userID === username){
-                      navigation.navigate('ProfilePage', {
-                        username: username,
-                        isDefaultUser: true,
-                      });
-                    }else{
-                      navigation.navigate('ProfilePage', {
-                        username: message.userID,
-                        isDefaultUser: false,
-                      });
-                    }
-                    
-                  }
-                }>{message.userID}</Text>
-                <Text style={styles.messageText}>{message.text}</Text>
-                <Text style={styles.likeCountText}>Likes: {message.likeCount}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={text => setInputText(text)}
-          value={inputText}
-          placeholder="Add a comment..."
-        />
-        <Button title="Post" onPress={handleSend} />
->>>>>>> master
-      </View>
-    </View>
+    </ThemeProvider>
   );
 };
 
@@ -424,7 +353,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontFamily: 'Helvetica',
-<<<<<<< HEAD
     fontSize: 15,
     marginTop: 7,
   },
@@ -457,9 +385,6 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 5,
     resizeMode: 'contain',
-=======
-    fontSize: 20,
->>>>>>> master
   },
   scrollView: {
     flex: 1,
