@@ -10,10 +10,18 @@ const ProfilePage = ({navigation, route}) => {
   
 
   useEffect(() => {
+    setName(username)
     db_operations.getKarma(username).then(karma => {
       setLikes(karma)
     });
-  }, []);
+    let timerId = setInterval(() => {
+      db_operations.getKarma(username).then(karma => {
+        setLikes(karma)
+      });
+    }, 5000); 
+
+    return () => clearInterval(timerId);
+  }, [username,likes]);
 
   const handleNameChange = (text) => {
     setName(text);
