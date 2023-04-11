@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Component,
   StyleSheet,
   View,
   Text,
   TextInput,
   Button,
   ScrollView,
-  TouchableOpacity,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import * as db_operations from '../db_operations.js';
 import { ThemeProvider, createTheme } from '@rneui/themed';
@@ -36,6 +35,7 @@ const theme = createTheme({
     fourth: '#A7A7A7',
     fifth: '#DBDBDB',
     sixth: '#403F3F',
+    seventh: '#F1F1F1',
   },
   mode: 'light',
 });
@@ -46,18 +46,23 @@ const MessageBoard = ({ navigation, route }) => {
   const [inputText, setInputText] = useState('');
   const [promptText, setPromptText] = useState('');
   const [promptID, setPromptID] = useState('');
-  const SORTBYTOP = 0;
-  const SORTBYNEW = 1;
-  const SORTBYLOCATION = 2;
-  const SORTBYOLD = 3;
-  const [sortType, setSortType] = useState(SORTBYTOP);
+  const SORTBYTOP = 0
+  const SORTBYNEW = 1
+  const SORTBYLOCATION = 2
+  const SORTBYOLD = 3
+  const [sortType, setSortType] = useState(SORTBYTOP)
   const { username } = route.params;
   const [selected, setSelected] = React.useState("");
 
-  const data = [
+  const data1 = [
     { key: '1', value: 'best posts' },
-    { key: '2', value: 'featured' },
-    { key: '3', value: 'latest' },
+    { key: '3', value: 'newest' },
+    { key: '4', value: 'oldest' },
+  ]
+
+  const data2 = [
+    { key: '1', value: 'high to low' },
+    { key: '2', value: 'low to high' },
   ]
 
 
@@ -72,20 +77,20 @@ const MessageBoard = ({ navigation, route }) => {
       db_operations.getResponses(prompt.promptID).then(messages => {
         setMessages(messages);
       });
-      db_operations.getLikedMessages(username).then(likedMessages => {
-        setLikedResponseIDs(likedMessages)
+      db_operations.getLikedMessages(username).then(likedMessages =>{
+       setLikedResponseIDs(likedMessages)
       });
     });
   }, []);
 
   const getCompareFunc = (sortType) => {
     if (sortType === SORTBYTOP) {
-      return (message_a, message_b) => {
-        if (message_a.likeCount > message_b.likeCount) {
+      return (message_a, message_b) => { 
+        if (message_a.likeCount < message_b.likeCount) {
           return 1
         } else if (message_a.likeCount < message_b.likeCount) {
           return -1
-        } else {
+        } else { 
           return 0
         }
       }
@@ -119,7 +124,7 @@ const MessageBoard = ({ navigation, route }) => {
     new_messages.sort(compare)
     console.log(messages)
     setMessages(new_messages)
-
+    
   }
 
   const handleSend = async () => {
@@ -142,7 +147,7 @@ const MessageBoard = ({ navigation, route }) => {
   const handleLike = async (username, posterUsername, promptID, responseID) => {
     console.debug(likedResponseIDs)
     const newLikedResponseIDs = await db_operations.handleLike(username, posterUsername, promptID, responseID)
-    console.debug('liked responmes', newLikedResponseIDs)
+    console.debug('liked responmes',newLikedResponseIDs)
     setLikedResponseIDs(newLikedResponseIDs);
     db_operations.getResponses(promptID).then(messages => {
       setMessages(messages);
@@ -150,8 +155,8 @@ const MessageBoard = ({ navigation, route }) => {
   };
   const handleDislike = async (username, posterUsername, promptID, responseID) => {
     console.debug(likedResponseIDs)
-    const newLikedResponseIDs = await db_operations.handleDislike(username, posterUsername, promptID, responseID)
-    console.debug('disliked responmes', newLikedResponseIDs)
+    const newLikedResponseIDs = await db_operations.handleDislike(username, posterUsername,promptID, responseID)
+    console.debug('disliked responmes',newLikedResponseIDs)
     setLikedResponseIDs(newLikedResponseIDs);
     db_operations.getResponses(promptID).then(messages => {
       setMessages(messages);
@@ -161,7 +166,7 @@ const MessageBoard = ({ navigation, route }) => {
   const handleLongPress = async (username, posterUsername, promptID, responseID) => {
     if ([username, posterUsername, promptID, responseID].includes(undefined)) {
       console.error(`got undefined in handleLongPress: username: ${username}, posterUsername: ${posterUsername}, promptID: ${promptID}, responseID: ${responseID}`)
-
+      
     }
     console.debug(`handlelongpress: ${username}, posterUsername: ${posterUsername}, promptID: ${promptID}, responseID: ${responseID}`)
     if (likedResponseIDs.includes(responseID)) {
@@ -170,7 +175,7 @@ const MessageBoard = ({ navigation, route }) => {
       await handleLike(username, posterUsername, promptID, responseID)
     }
   }
-
+  
   const handleReply = (responseText, responseID, userID) => {
     if ([responseText, responseID, userID].includes(undefined)) {
       console.error("got undefined in handleReply")
@@ -187,7 +192,7 @@ const MessageBoard = ({ navigation, route }) => {
   };
 
   const getLikes = async (responseID) => {
-    return await db_operations.getLikes(promptID, responseID)
+    return await db_operations.getLikes(promptID,responseID)
   }
 
   return (
@@ -209,15 +214,41 @@ const MessageBoard = ({ navigation, route }) => {
               style={styles.rocket}
               source={require('../assets/icons/rocket_icon.png')}
             />
+            <View style={styles.list1}>
+              <SelectList
+                setSelected={(val) => setSelected(val)}
+                data={data1}
+                save="value"
+                search={false}
+                boxStyles={{ borderRadius: 0, height: 45, width: 120, borderColor: '#FFFFFF', paddingLeft: 8 }}
+                inputStyles={{ fontSize: 13 }}
+                placeholder='best posts'
+                onSelect={() => handleSort(SORTBYNEW)}
+                dropdownStyles={{ position: "absolute", top: 40, width: "100%", zIndex: 2, borderColor: '#000000', borderrRadius: 10, backgroundColor: '#F1F1F1' }}
+              />
+            </View>
           </View>
           <View style={styles.rankStack}>
             <Image
               style={styles.stack}
               source={require('../assets/icons/stackview_icon.png')}
             />
+            <View style={styles.list2}>
+              <SelectList
+                setSelected={(val) => setSelected(val)}
+                data={data2}
+                save="value"
+                search={false}
+                boxStyles={{ borderRadius: 0, height: 45, width: 120, borderColor: '#FFFFFF', paddingLeft: 8 }} //override default styles
+                dropdownStyles={{ position: "absolute", top: 40, width: "100%", zIndex: 2, borderColor: '#000000', borderrRadius: 10, backgroundColor: '#F1F1F1' }}
+                inputStyles={{ fontSize: 13 }}
+                placeholder='high to low'
+                onSelect={() => handleSort(SORTBYOLD)}
+              />
+            </View>
           </View>
         </View>
-        <Button onPress={
+        {/* <Button onPress={
           () => handleSort(SORTBYNEW)
         } title="Top" />
         <Button onPress={
@@ -225,7 +256,7 @@ const MessageBoard = ({ navigation, route }) => {
         } title="New" />
         <Button onPress={
           () => handleSort(SORTBYTOP)
-        } title="Old" />
+        } title="Old" /> */}
         <ScrollView style={styles.scrollView}>
           <View style={styles.messageContainer}>
             {messages.map((message, index) => (
@@ -240,24 +271,56 @@ const MessageBoard = ({ navigation, route }) => {
                   }
                   }
                   onPress={() => {
-                    handleReply(message.text, message.responseID, message.userID)
+                    handleReply(message.text, message.responseID, message.userID);
                   }
-                  }>
-                  <Text style={styles.username} onPress={
-                    () => {
-                      navigation.navigate('Profile', {
-                        username: message.userID,
-                      });
-                    }
-                  }>{message.userID}</Text>
-                  <Text style={styles.messageText}>{message.text}</Text>
-                  <Text style={styles.likeCountText}>Likes: {message.likeCount}</Text>
+                  }
+                >
+                  <View style={styles.allInfo}>
+                    <View style={styles.headerMessage}>
+                      <Image
+                        style={styles.profPicture}
+                        source={require('../assets/images/dog_picture.jpg')}
+                      />
+                      <View style={styles.furtherInfo}>
+                        <Text style={styles.username} onPress={
+                          () => {
+                            navigation.navigate('Profile', {
+                              username: message.userID,
+                            });
+                          }
+                        }>{message.userID}</Text>
+                        <View style={styles.subsetMessage}>
+                          <Text style={styles.location}> Los Angeles ~~~ </Text>
+                          {/* <View style={styles.dotMessage}>
+                            <Text style={styles.dot}> • </Text>
+                          </View> */}
+                          <Text style={styles.time}> 2 hrs late </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View styles={styles.mainMessage}>
+                      <Text style={styles.messageText}>{message.text}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.bottomRow}>
+                    <TouchableOpacity >
+                      <Image style={styles.upvoteImage} source={require('../assets/icons/upvote_icon.png')} />
+                    </TouchableOpacity>
+                    <Text style={styles.likeCountText}>{message.likeCount}</Text>
+                    <TouchableOpacity >
+                      <Image style={styles.downvoteImage} source={require('../assets/icons/downvote_icon.png')} />
+                    </TouchableOpacity>
+                    <Image style={styles.commentImage} source={require('../assets/icons/comments_icon.png')} />
+                    <Text style={styles.commentNumber}>5</Text>
+                    <Image style={styles.shareImage} source={require('../assets/icons/share_icon.png')} />
+                    <Text style={styles.shareText}>Share</Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             ))}
           </View>
         </ScrollView>
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
             onChangeText={text => setInputText(text)}
@@ -265,7 +328,7 @@ const MessageBoard = ({ navigation, route }) => {
             placeholder="Add a comment..."
           />
           <Button title="Post" onPress={handleSend} />
-        </View>
+        </View> */}
       </View>
     </ThemeProvider>
   );
@@ -282,7 +345,128 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 40,
+  },
+  qotd: {
+    fontWeight: 'bold',
+    fontFamily: 'Helvetica',
+    fontSize: 20,
+  },
+  logo: {
+    fontFamily: 'Helvetica',
+    fontSize: 15,
+    marginTop: 7,
+  },
+  rank: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 15,
+  },
+  list1: {
+    marginLeft: 0,
+  },
+  rankRocket: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 5,
+  },
+  rankStack: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  stack: {
+    width: 30,
+    height: 30,
     marginTop: 5,
+    resizeMode: 'contain',
+  },
+  rocket: {
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    resizeMode: 'contain',
+  },
+  scrollView: {
+    flex: 1,
+    padding: 10,
+    paddingLeft: 28,
+    paddingRight: 28,
+    zIndex: -2,
+    marginBottom: 30,
+  },
+  messageContainer: {
+    marginBottom: 20,
+  },
+  messageText: {
+    color: '#616161',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginLeft: 9,
+    marginRight: 5,
+  },
+  allInfo: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  message: {
+    backgroundColor: theme.createCommentColors.seventh,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  headerMessage: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  furtherInfo: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  subsetMessage: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  location: {
+    color: '#9D9D9D',
+    fontSize: 10,
+    marginLeft: 8,
+    fontStyle: 'italic',
+  },
+  time: {
+    color: '#BDBCBC',
+    fontSize: 10,
+    marginLeft: -3,
+    fontStyle: 'italic',
+  },
+  profPicture: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    marginLeft: 5,
+    marginTop: 5,
+  },
+  bottomRow: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 90,
+    marginLeft: 10,
+    marginBottom: 5,
+  },
+  upvoteImage: {
+    width: 17,
+    height: 17,
+    resizeMode: 'contain',
+    opacity: 0.65,
+    marginRight: 5,
+  },
+  downvoteImage: {
+    width: 17,
+    height: 17,
+    resizeMode: 'contain',
+    opacity: 0.65,
+    marginLeft: 5,
   },
   logoContainer: {
     marginTop: 50,
@@ -293,48 +477,29 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'contain',
   },
-  qotd: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    color: theme.createCommentColors.sixth,
-  },
-  logo: {
-    fontStyle: 'italic',
-    fontFamily: 'Helvetica',
-    fontSize: 15,
-    marginTop: 7,
-  },
-  rank: {
-
-  },
-  rankRocket: {
-
-  },
-  rankStack: {
-
-  },
-  stack: {
-    width: 30,
-    height: 30,
+  commentImage: {
+    width: 19,
+    height: 19,
     resizeMode: 'contain',
+    opacity: 0.65,
+    marginLeft: 25,
+    marginRight: 9,
   },
-  rocket: {
-    width: 30,
-    height: 30,
+  commentNumber: {
+    color: '#726D6D',
+    fontSize: 14,
+  },
+  shareText: {
+    color: '#726D6D',
+    fontSize: 13,
+  },
+  shareImage: {
+    width: 27,
+    height: 27,
+    marginLeft: 25,
+    marginTop: -7,
     resizeMode: 'contain',
-  },
-  scrollView: {
-    flex: 1,
-    padding: 10,
-  },
-  messageContainer: {
-    marginBottom: 20,
-  },
-  message: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    opacity: 0.60,
   },
   likedMessage: {
     backgroundColor: '#ADD8E6',
@@ -343,15 +508,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   likeCountText: {
-    color: 'black',
-    fontWeight: 'bold',
+    color: '#726D6D',
+    fontSize: 14,
   },
   username: {
     fontWeight: 'bold',
+    color: '#6A6A6A',
     marginBottom: 5,
-  },
-  messageText: {
-    fontSize: 16,
+    marginTop: 10,
+    marginLeft: 10,
+    fontSize: 11.5,
   },
   inputContainer: {
     flexDirection: 'row',
