@@ -19,8 +19,6 @@ import ConfirmationPage from './Components/ConfirmationPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { decode, encode } from 'base-64';
 import Settings from './Components/Settings';
-import OtherProfile from './Components/OtherProfile';
-
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -111,7 +109,6 @@ function App() {
           <Stack.Screen name="MessageBoard" component={MessageBoardTabs} options={{ headerShown: false }} />
           {/* <Stack.Screen name="Chat" component={ChatPage} options={{ headerShown: false }} /> */}
           <Stack.Screen name="ProfilePage" component={ProfilePage} options={{ headerShown: false }} />
-          <Stack.Screen name="Other Profile" component={OtherProfile} options={{ headerShown: false }} />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ headerShown: false }} />
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />
           <Stack.Screen name="SuccessSignUp" component={SuccessSignUp} options={{ headerShown: false }} />
