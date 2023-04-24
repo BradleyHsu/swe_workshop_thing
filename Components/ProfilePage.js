@@ -68,16 +68,24 @@ const ProfilePage = ({ navigation, route }) => {
       <View style={styles.container}>
         {username === current_username &&
           (<View>
-            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Settings', {
+                                          username: username, 
+                                          current_username: current_username,
+                                          isDefaultUser: false,
+                                        })}>
               <View style={styles.threeDotsContainer}>
                 <Image source={require('../assets/icons/threedots_icon.png')}
                   style={styles.threeDots} />
               </View>
             </TouchableOpacity>
             <View style={styles.profilePicContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+              <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
+                                          username: username, 
+                                          current_username: current_username,
+                                          isDefaultUser: false,
+                                        })}>
                 <Image
-                  source={require('../assets/images/dog_picture.jpg')}
+                  source={{uri: "data:image/png;base64," + profilePicture}}
                   style={styles.profilePicture}
                 />
               </TouchableOpacity>
