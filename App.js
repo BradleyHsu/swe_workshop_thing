@@ -19,6 +19,8 @@ import ConfirmationPage from './Components/ConfirmationPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { decode, encode } from 'base-64';
 import Settings from './Components/Settings';
+import OtherProfile from './Components/OtherProfile';
+
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -58,23 +60,23 @@ function MessageBoardTabs({ route: { params } }) {
   const { username: currentUser } = params;
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Message Board" component={MessageBoardTabStack} initialParams={params} options={{
+      <Tab.Screen name="home" component={MessageBoardTabStack} initialParams={params} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Icon name="home" color={color} size={size} />
+          <Icon name="Create" color={color} size={size} />
         ),
       }} />
-      <Tab.Screen name="Comment Page" component={CommentTabStack} initialParams={params} options={{
+      <Tab.Screen name="create" component={CommentTabStack} initialParams={params} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Icon name="message" color={color} size={size} />
+          <Icon name="AddCircleOutlineRounded" color={color} size={size} />
         ),
       }}
       />
-      <Tab.Screen name="Profile Page" component={ProfilePage} initialParams={{ username: currentUser, current_username: currentUser }} options={{
+      <Tab.Screen name="profile" component={ProfilePage} initialParams={{ username: currentUser, current_username: currentUser }} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Icon name="person" color={color} size={size} />
+          <Icon name="PersonRounded" color={color} size={size} />
         ),
       }}
         listeners={({ navigation, route }) => ({
@@ -109,6 +111,7 @@ function App() {
           <Stack.Screen name="MessageBoard" component={MessageBoardTabs} options={{ headerShown: false }} />
           {/* <Stack.Screen name="Chat" component={ChatPage} options={{ headerShown: false }} /> */}
           <Stack.Screen name="ProfilePage" component={ProfilePage} options={{ headerShown: false }} />
+          <Stack.Screen name="Other Profile" component={OtherProfile} options={{ headerShown: false }} />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} options={{ headerShown: false }} />
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />
           <Stack.Screen name="SuccessSignUp" component={SuccessSignUp} options={{ headerShown: false }} />
