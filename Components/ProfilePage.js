@@ -56,28 +56,217 @@ const ProfilePage = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Settings', {
+    <MenuProvider>
+      <View style={styles.container}>
+        {username === current_username &&
+          (<View>
+            <TouchableOpacity onPress={() => navigation.navigate('Settings', {
                                           username: username, 
                                           current_username: current_username,
                                           isDefaultUser: false,
                                         })}>
-        <View style={styles.threeDotsContainer}>
-          <Image source={require('../assets/icons/threedots_icon.png')}
-            style={styles.threeDots} />
-        </View>
-      </TouchableOpacity>
-      <View style={styles.profilePicContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
+              <View style={styles.threeDotsContainer}>
+                <Image source={require('../assets/icons/threedots_icon.png')}
+                  style={styles.threeDots} />
+              </View>
+            </TouchableOpacity>
+            <View style={styles.profilePicContainer}>
+              <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
                                           username: username, 
                                           current_username: current_username,
                                           isDefaultUser: false,
                                         })}>
-          <Image
-            source={{uri: "data:image/png;base64," + profilePicture}}
-            style={styles.profilePicture}
-          />
-        </TouchableOpacity>
+                <Image
+                  source={{uri: "data:image/png;base64," + profilePicture}}
+                  style={styles.profilePicture}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.usernameContainer}>
+              <Text style={styles.username}>{name}</Text>
+            </View>
+            <View style={styles.itemsContainer}>
+              <View style={styles.followersContainer}>
+                <Text style={styles.followers}>Followers</Text>
+              </View>
+              <View style={styles.followingContainer}>
+                <Text style={styles.following}>Following</Text>
+              </View>
+              <View style={styles.charmaContainer}>
+                <Text style={styles.charma}>Charma</Text>
+              </View>
+            </View>
+            <View style={styles.itemsNumContainer}>
+              <View style={styles.followersNumContainer}>
+                <Text style={styles.followersNum}>76</Text>
+              </View>
+              <View style={styles.followingNumContainer}>
+                <Text style={styles.followingNum}>142</Text>
+              </View>
+              <View style={styles.charmaNumContainer}>
+                <Text style={styles.charmaNum}>{likes}</Text>
+              </View>
+            </View>
+            <View style={styles.bioContainer}>
+              <View style={styles.bioContainerBold} >
+                <Text style={styles.bio}>
+                  Bio
+                </Text>
+              </View>
+              <View style={styles.bioTextContainer}>
+                <Text style={styles.bioText}>
+                  i am a cool person.
+                </Text>
+              </View>
+            </View>
+            <View style={styles.locationContainer}>
+              <View style={styles.locationTextContainer}>
+                <Text style={styles.locationText}>
+                  Location
+                </Text>
+              </View>
+              <View style={styles.locationInfoContainer}>
+                <Text style={styles.locationInfo}>los angeles, ca</Text>
+              </View>
+            </View>
+          </View>)
+        }
+        {username != current_username &&
+          (
+            <View style={styles.container2}>
+              <TouchableOpacity onPress={() => navigation.navigate('MessageBoard')}>
+                <View style={styles.backArrowContainer}>
+                  <Image source={require('../assets/icons/back_arrow_icon.png')}
+                    style={styles.backArrow} />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.username2Container}>
+                <Text style={styles.username2}>{name}</Text>
+              </View>
+              <View style={styles.topRowContainer}>
+                <View style={styles.picContainer}>
+                  <Image source={require('../assets/images/dog_picture.jpg')}
+                    style={styles.pic} />
+                </View>
+                <View style={styles.bottomRowContainer}>
+                  <View style={styles.firstRowContainer}>
+                    <View style={styles.followers2Container}>
+                      <Text style={styles.followers2}>Followers</Text>
+                    </View>
+                    <View style={styles.following2Container}>
+                      <Text style={styles.following2}>Following</Text>
+                    </View>
+                    <View style={styles.charma2Container}>
+                      <Text style={styles.charma2}>Charma</Text>
+                    </View>
+                  </View>
+                  <View style={styles.secondRowContainer}>
+                    <View style={styles.followers2CountContainer}>
+                      <Text style={styles.followingCount2}>20</Text>
+                    </View>
+                    <View style={styles.following2CountContainer}>
+                      <Text style={styles.followersCount2}>40</Text>
+                    </View>
+                    <View style={styles.charma2CountContainer}>
+                      <Text style={styles.charma2Count}>{likes}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.bioWholeContainer}>
+                <View style={styles.bioFrontContainer}>
+                  <Text style={styles.bioFront}>
+                    Bio
+                  </Text>
+                </View>
+                <View style={styles.bioInfoContainer}>
+                  <Text style={styles.bioInfo}>
+                    i am cool person. i love 437.
+                    #washu437rocks
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.mutualFriendsContainer}>
+                <View style={styles.picMutualFriendsContainer}>
+                  <View style={styles.picFriendsContainer}>
+                    <Image source={require('../assets/images/dog_picture.jpg')}
+                      style={styles.picMutualFriends} />
+                  </View>
+                  <View style={styles.moreMutualFriendsContainer}>
+                    <View style={styles.moreMutualFriendsText}>
+                      <Text style={styles.moreMutualFriends}>+18</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.mutualFriendsTextContainer}>
+                  <Text style={styles.mutualFriendsText}>
+                    Mutual friends with [username1] and 18 more
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={handleFollow}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: isFollowing ? '#7456C9' : '#5C64B0',
+                  padding: 13,
+                  borderRadius: 15,
+                  marginTop: 7,
+                  marginLeft: 25,
+                  marginRight: 25,
+                }}
+              >
+                <Text style={{
+                  color: '#DFDFDF',
+                  textAlign: 'center',
+                  fontFamily: 'InriaSans-Bold',
+                }}>{isFollowing ? 'Friends' : 'Follow'}</Text>
+              </TouchableOpacity>
+              <View style={styles.postForDay}>
+                <View style={styles.headerContainer}>
+                  <View style={styles.headerLocationContainer}>
+                    <Text style={styles.headerLocation}>Los Angeles, California</Text>
+                  </View>
+                  <View style={styles.headerDotContainer}>
+                    <Text style={styles.headerDot}> • </Text>
+                  </View>
+                  <View style={styles.headerTimeContainer}>
+                    <Text style={styles.headerTime}>2 hrs late</Text>
+                  </View>
+                  <View style={styles.headerThreeDotsContainer}>
+                    <Menu>
+                      <MenuTrigger text='•••' customStyles={styles.threeDots} />
+                      <MenuOptions>
+                        <MenuOption onSelect={() => alert(`Saved`)} text='Save' />
+                        <MenuOption onSelect={() => alert(`Reported`)} >
+                          <Text style={{ color: 'red' }}>Report</Text>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </View>
+                </View>
+                <View style={styles.mainTextContainer}>
+                  <Text style={styles.mainText}>Going skydiving...</Text>
+                </View>
+                <View style={styles.footerContainer}>
+                  <View style={styles.upvoteContainer}>
+                    <Image source={require('../assets/icons/black_thumb_icon.png')}
+                      style={styles.upvote} />
+                  </View>
+                  <View style={styles.upvoteNumContainer}>
+                    <Text style={styles.upvoteNum}>20</Text>
+                  </View>
+                  <View style={styles.commentContainer}>
+                    <Image source={require('../assets/icons/comments_icon.png')}
+                      style={styles.comment} />
+                  </View>
+                  <View style={styles.commentNumContainer}>
+                    <Text style={styles.commentNum}>2</Text>
+                  </View>
+                </View>
+              </View>
+            </View>)
+        }
       </View>
       <View style={styles.usernameContainer}>
         <Text style={styles.username}>{name}</Text>
