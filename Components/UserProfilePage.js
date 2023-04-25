@@ -67,8 +67,9 @@ const UserProfilePage = ({ navigation, route }) => {
    <View style={styles.container}>
     <View>
       <TouchableOpacity onPress={() => navigation.navigate('Settings', {
-                                          username: username,
+                                          username: username, 
                                           location: location,
+                                          bio: bio,
                                         })}>
        <View style={styles.threeDotsContainer}>
         <Image source={require('../assets/icons/threedots_icon.png')}
@@ -77,7 +78,9 @@ const UserProfilePage = ({ navigation, route }) => {
       </TouchableOpacity>
       <View style={styles.profilePicContainer}>
        <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
-                                          username: username
+                                          username: username, 
+                                          location: location,
+                                          bio: bio,
                                         })}>
         <Image
             source={{uri: "data:image/png;base64," + profilePicture}}

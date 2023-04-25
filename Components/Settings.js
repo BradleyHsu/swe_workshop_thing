@@ -48,7 +48,7 @@ const Settings = ({ navigation, route }) => {
     wifi: false,
   });
 
-  const {username, location} = route.params
+  const {username, location, bio} = route.params
   const [profilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
@@ -75,8 +75,8 @@ const Settings = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
                                           username: username, 
-                                          current_username: username,
-                                          isDefaultUser: false,
+                                          location: location,
+                                          bio: bio,
                                         })}>
           <View style={styles.editProfileContainer}>
             <View style={styles.profilePictureContainer}>
