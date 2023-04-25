@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
 import * as db_operations from '../db_operations.js';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { StackActions } from '@react-navigation/native';
@@ -30,10 +30,15 @@ const EditProfile = ({ navigation, route }) => {
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else {
-        const base64Image = response.assets[0].base64;
-        console.log("base64Image", base64Image)
-        setProfilePicture(base64Image)
-        console.log("after change", profilePicture)
+        if (response.assets[0].hasOwnProperty('base64')) {
+          const base64Image = response.assets[0].base64;
+          console.log("base64Image", base64Image)
+          setProfilePicture(base64Image)
+          console.log("after change", profilePicture)
+          await db_operations.setProfilePic(username, base64Image);
+        } else {
+          Alert.alert("Picture too large, cannot set profile picture.")
+        }
       }
     });
   };
@@ -50,7 +55,7 @@ const EditProfile = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
           <Image
             style={styles.icon}
-            source={require('../assets/images/x-icon.png')}
+            source={{uri: "data:image/png;base64," + profilePicture}}
           />
         </TouchableOpacity>
       </View>
@@ -79,6 +84,7 @@ const EditProfile = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={()=>console.log(username)}>
       <View style={styles.usernameContainer}>
         <View style={styles.usernameTagContainer} >
           <Text style={styles.usernameTag}>
@@ -91,6 +97,7 @@ const EditProfile = ({ navigation, route }) => {
           </Text>
         </View>
       </View>
+      </TouchableOpacity>
       <View style={styles.bioContainer}>
         <View style={styles.bioContainerBold} >
           <Text style={styles.bio}>
