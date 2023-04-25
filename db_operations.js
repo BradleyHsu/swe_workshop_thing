@@ -129,7 +129,7 @@ function setUsername(username, userCredential) {
   });
 }
 
-async function updateUsername(prevUsername, newUsername){
+async function updateUsername(prevUsername, newUsername) {
   const userObj = await getUser(prevUsername);
   const userRef = await getUserRef(prevUsername);
   userObj.username = newUsername
@@ -274,17 +274,17 @@ function replyToResponse(userID, text, promptID, responseID) {
   const responsesRef = getResponseRef(promptID, responseID)
   get(responsesRef).then(snapshot => {
     if (snapshot.exists()) {
-      update(responsesRef, {replyCount: snapshot.val().replyCount + 1})
+      update(responsesRef, { replyCount: snapshot.val().replyCount + 1 })
       // return Promise.resolve(snapshot.val())
     } else {
-      update(responsesRef, {replyCount: 0})
+      update(responsesRef, { replyCount: 0 })
     }
   })
     .catch(error => {
       console.error(error);
       return Promise.reject(error);
     });
-  
+
 }
 
 function getResponseRef(promptID, responseID) {
@@ -523,19 +523,19 @@ async function followUser(username, targetUsername) {
   }
 }
 
-async function getFollowingCount(username){
+async function getFollowingCount(username) {
   const following = await getFollowing(username)
   return following.length
 }
 
-async function updateLocation(username, location){
+async function updateLocation(username, location) {
   const userObj = await getUser(username);
   const userRef = await getUserRef(username);
   userObj.location = location
   update(userRef, userObj)
 }
 
-async function getLocation(username){
+async function getLocation(username) {
   const userObj = await getUser(username);
   if (userObj.hasOwnProperty("location")) {
     return userObj.location
@@ -544,14 +544,53 @@ async function getLocation(username){
   }
 }
 
-async function updateBio(username, bio){
+async function updateBio(username, bio) {
   const userObj = await getUser(username);
   const userRef = await getUserRef(username);
   userObj.bio = bio
   update(userRef, userObj)
 }
 
-async function getBio(username){
+async function togglePrivate(username) {
+  const userObj = await getUser(username);
+  const userRef = await getUserRef(username);
+  if (!userObj.hasOwnProperty("private")) {
+    userObj.private = false
+  }
+  userObj.private = !userObj.private
+  update(userRef, userObj)
+}
+
+async function getPrivate(username) {
+  const userObj = await getUser(username);
+  if (userObj.hasOwnProperty("private")) {
+    return userObj.private
+  } else {
+    return false
+  }
+}
+
+async function toggleNotifications(username) {
+  const userObj = await getUser(username);
+  const userRef = await getUserRef(username);
+  if (!userObj.hasOwnProperty("notifications")) {
+    userObj.notifications = true
+  }
+  userObj.notifications = !userObj.notifications
+  update(userRef, userObj)
+}
+
+async function getNotifications(username) {
+  const userObj = await getUser(username);
+  if (userObj.hasOwnProperty("notifications")) {
+    return userObj.notifications
+  } else {
+    return true
+  }
+}
+
+
+async function getBio(username) {
   const userObj = await getUser(username);
   if (userObj.hasOwnProperty("bio")) {
     return userObj.bio
@@ -560,7 +599,7 @@ async function getBio(username){
   }
 }
 
-async function getFollowerCount(username){
+async function getFollowerCount(username) {
   var followerCount = 0
   const thisUserID = await getUserIDByUsername(username)
   const dbRef = ref(db);
@@ -570,10 +609,10 @@ async function getFollowerCount(username){
         const users = snapshot.val();
         for (const userID in users) {
           const user = users[userID];
-          if(!user.following){
+          if (!user.following) {
             continue;
           }
-          for(const followingUserID of user.following){
+          for (const followingUserID of user.following) {
             if (followingUserID === thisUserID) {
               followerCount++;
             }
@@ -588,7 +627,7 @@ async function getFollowerCount(username){
     .catch(error => {
       console.error(error);
     });
- 
+
 }
 
 async function unfollowUser(username, targetUsername) {
@@ -629,6 +668,19 @@ async function setProfilePic(username, base64Pic) {
 
   userObj.profilepic = base64Pic;
   update(userRef, userObj);
+}
+
+async function submitSuggestionPrompt(promptText) {
+  const promptRef = ref(db, 'suggestionPrompts');
+  const newPromptRef = push(promptRef);
+  const newPromptID = newPromptRef.key;
+
+  const promptObj = {
+    promptID: newPromptID,
+    promptText: promptText,
+  };
+
+  set(newPromptRef, promptObj);
 }
 /* real-time listening 
 const commentRef = ref(db, 'prompts/' + promptID + '/starCount');
@@ -673,6 +725,11 @@ export {
   updateBio,
   getBio,
   updateUsername,
+  submitSuggestionPrompt,
+  togglePrivate,
+  getPrivate,
+  toggleNotifications,
+  getNotifications,
   incrementLikeComment,
   decrementLikeComment,
   handleLikeComment,

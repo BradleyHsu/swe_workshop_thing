@@ -39,6 +39,9 @@ const DiscoverStack = createNativeStackNavigator();
 import AppContext from './AppContext';
 import QOTD from './Components/QOTD';
 import Discover from './Components/Discover';
+import SubmitPrompt from './Components/SubmitPrompt';
+import About from './Components/About';
+import Help from './Components/Help';
 
 function MessageBoardTabStack({ route: { params } }) {
   return (
@@ -58,6 +61,9 @@ function ProfilePageTabStack({ route: { params } }) {
       <ProfileStack.Screen name="Settings" component={Settings} ititialParams={params} options={{ headerShown: false }} />
       <ProfileStack.Screen name="CalView" component={CalView} ititialParams={params} options={{ headerShown: false }} />
       <ProfileStack.Screen name="QOTD" component={QOTD} ititialParams={params} options={{ headerShown: false }} />
+      <ProfileStack.Screen name="SubmitPrompt" component={SubmitPrompt} ititialParams={params} options={{ headerShown: false }} />
+      <ProfileStack.Screen name="About" component={About} ititialParams={params} options={{ headerShown: false }} />
+      <ProfileStack.Screen name="Help" component={Help} ititialParams={params} options={{ headerShown: false }} />
     </ProfileStack.Navigator>
   )
 }

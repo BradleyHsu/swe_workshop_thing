@@ -20,7 +20,7 @@ const SECTIONS = [
     header: 'MEMORIES',
     items: [
       { id: 'calendar', icon: 'calendar', label: 'previous prompts', type: 'link' },
-      { id: 'history', icon: 'archive', label: 'past replies', type: 'link' },
+      // { id: 'history', icon: 'archive', label: 'past replies', type: 'link' },
     ],
   },
   {
@@ -28,7 +28,8 @@ const SECTIONS = [
     items: [
       { id: 'submit', icon: 'send', label: 'submit a prompt', type: 'link' },
       { id: 'contact', icon: 'bell', label: 'notifications', type: 'toggle' },
-      { id: 'private', icon: 'lock', label: 'use privacy', type: 'link' },
+      // { id: 'private', icon: 'lock', label: 'use privacy', type: 'toggle' },
+
     ],
   },
   {
@@ -50,11 +51,21 @@ const Settings = ({ navigation, route }) => {
 
   const { username, location, bio } = route.params
   const [profilePicture, setProfilePicture] = useState(null);
-  const [switchValue, setSwitchValue] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [isContact, setIsContact] = useState(false);
 
-  const toggleSwitch = (value) => {
+  const togglePrivate = (value) => {
     //To handle switch toggle
-    setSwitchValue(value);
+    setIsPrivate(value);
+    db_operations.togglePrivate(username);
+    //State changes according to switch
+  };
+
+  const toggleContact = (value) => {
+    //To handle switch toggle
+    setIsContact(value);
+    db_operations.toggleNotifications(username);
+
     //State changes according to switch
   };
 
@@ -64,7 +75,17 @@ const Settings = ({ navigation, route }) => {
       console.log(pic);
       setProfilePicture(pic);
     });
-  });
+    db_operations.getNotifications(username).then(notifs => {
+      console.log("got notifs of user ", username);
+      console.log(notifs);
+      setIsPrivate(notifs);
+    });
+    db_operations.getPrivate(username).then(priv => {
+      console.log("got privacy of user ", username);
+      console.log(priv);
+      setSwitchValue(priv);
+    });
+  }, []);
 
 
   const handleLogout = () => {
@@ -122,7 +143,7 @@ const Settings = ({ navigation, route }) => {
               <Text style={styles.settingsHeaderText}>{header}</Text>
             </View>
             <View style={styles.settingsBody}>
-              {items.map(({ id, label, icon, type, num }, index) => {
+              {items.map(({ id, label, icon, type }, index) => {
                 return (
                   <View
                     key={id}
@@ -131,7 +152,22 @@ const Settings = ({ navigation, route }) => {
                       index === 0 && { borderTopWidth: 0 },
                     ]}>
                     <TouchableOpacity
-                      onPress={() => { navigation.navigate('CalView', { id: 'calendar', username: username }) }
+
+                      onPress={() => {
+                        if (id === 'calendar') {
+                          navigation.navigate('CalView', { id: 'calendar', username: username });
+                        } else if (id === 'submit') {
+                          navigation.navigate('SubmitPrompt', { /* any necessary parameters */ });
+                        } else if (id === 'logout') {
+                          navigation.navigate('Home', { /* any necessary parameters */ });
+                        } else if (id === 'help') {
+                          navigation.navigate('Help', { /* any necessary parameters */ });
+                        } else if (id === 'about') {
+                          navigation.navigate('About', { /* any necessary parameters */ });
+                          // } else if (id === 'private') {
+                          //   navigation.navigate('Privacy', { /* any necessary parameters */ });
+                        }
+                      }
                       }>
                       <View style={styles.row}>
                         <FeatherIcon
@@ -143,10 +179,16 @@ const Settings = ({ navigation, route }) => {
 
                         <Text style={styles.rowLabel}>{label}</Text>
                         <View style={styles.rowSpace} />
-                        {type === 'toggle' && (
+                        {type === 'toggle' && id === 'private' && (
                           <Switch
-                            onValueChange={toggleSwitch}
-                            value={switchValue}
+                            onValueChange={togglePrivate}
+                            value={isPrivate}
+                          />
+                        )}
+                        {type === 'toggle' && id === 'contact' && (
+                          <Switch
+                            onValueChange={toggleContact}
+                            value={isContact}
                           />
                         )}
                         {(type === 'select' || type === 'link') && (
@@ -224,8 +266,8 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     marginLeft: 17,
     marginRight: 17,
-    marginTop: 45,
-    marginBottom: 35,
+    marginTop: 35,
+    marginBottom: 55,
     flexDirection: 'row',
   },
   profilePictureContainer: {
@@ -236,8 +278,8 @@ const styles = StyleSheet.create({
     height: 35,
   },
   backArrowContainer: {
-    marginLeft: 20,
-    marginTop: 20,
+    marginLeft: 25,
+    marginTop: 40,
   },
 
   settingsHeader: {
