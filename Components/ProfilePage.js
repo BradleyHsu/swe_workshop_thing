@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 import * as db_operations from '../db_operations.js';
 import {
   Menu,
@@ -20,6 +21,7 @@ const ProfilePage = ({ navigation, route }) => {
   const [likes, setLikes] = useState(0); // number of likes user has gotten
   const [isFollowing, setIsFollowing] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  
 
 
   useEffect(() => {
@@ -75,12 +77,10 @@ const ProfilePage = ({ navigation, route }) => {
               </View>
             </TouchableOpacity>
             <View style={styles.profilePicContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
                 <Image
-                  source={require('../assets/images/dog_picture.jpg')}
-                  style={styles.profilePicture}
+                    source={{uri: "data:image/png;base64," + profilePicture}}
+                    style={styles.profilePicture}
                 />
-              </TouchableOpacity>
             </View>
             <View style={styles.usernameContainer}>
               <Text style={styles.username}>{name}</Text>
@@ -133,8 +133,8 @@ const ProfilePage = ({ navigation, route }) => {
         }
         {username != current_username &&
           (
-            <View style={styles.container2}>
-              <TouchableOpacity onPress={() => navigation.navigate('MessageBoard')}>
+            <View style={styles.container2}>           
+              <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
                 <View style={styles.backArrowContainer}>
                   <Image source={require('../assets/icons/back_arrow_icon.png')}
                     style={styles.backArrow} />
@@ -429,15 +429,27 @@ const styles = StyleSheet.create({
     marginLeft: 7,
     fontWeight: 'bold',
   },
-  threeDots: {
-    width: 22,
-    height: 22,
+  // threeDots: {
+  //   width: 22,
+  //   height: 22,
+  //   opacity: 0.8,
+  // },
+  // threeDotsContainer: {
+  //   position: 'absolute',
+  //   top: 50,
+  //   right: 30,
+  // },
+  backArrow: {
+    width: 35,
+    height: 35,
     opacity: 0.8,
+    
   },
-  threeDotsContainer: {
+  backArrowContainer: {
     position: 'absolute',
     top: 50,
-    right: 30,
+    left: 20,
+    backgroundColor: 'lightgray', //TODO, change this
   },
   backArrow: {
     width: 35,

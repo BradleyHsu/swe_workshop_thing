@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import * as db_operations from '../db_operations.js';
 import {launchImageLibrary} from 'react-native-image-picker';
-
+import { StackActions } from '@react-navigation/native';
 
 const EditProfile = ({ navigation, route }) => {
   const username = route.params.username;
@@ -93,14 +93,15 @@ const EditProfile = ({ navigation, route }) => {
     });
   };
 
+  const handleSave = () => {
+    //TODO: add ability to save username/prof picture
+    navigation.dispatch(StackActions.pop(1))
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfilePage', {
-                                                username: username, 
-                                                current_username: current_username,
-                                                isDefaultUser: false,
-                                              })}>
+        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
           <Image
             style={styles.icon}
             source={require('../assets/images/x-icon.png')}
@@ -109,11 +110,7 @@ const EditProfile = ({ navigation, route }) => {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          onPress={() => navigation.navigate('ProfilePage', {
-            username: username, 
-            current_username: current_username,
-            isDefaultUser: false,
-          })}
+          onPress={() => handleSave()}
           color="#464646"
           title="Save"
           fontFamily="Arial"

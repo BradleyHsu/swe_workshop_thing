@@ -10,6 +10,7 @@ import {
   Switch,
   Button,
 } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as db_operations from '../db_operations.js';
 
@@ -73,11 +74,7 @@ const Settings = ({ navigation, route }) => {
   return (
     <View style={styles.container2}>
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfilePage', {
-                                          username: username, 
-                                          current_username: current_username,
-                                          isDefaultUser: false,
-                                        })}>
+        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
           <View style={styles.backArrowContainer}>
             <Image source={require('../assets/icons/back_arrow_icon.png')}
               style={styles.backArrow} />
