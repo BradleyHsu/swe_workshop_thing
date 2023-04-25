@@ -10,6 +10,7 @@ import {
   Switch,
   Button,
 } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as db_operations from '../db_operations.js';
 
@@ -47,14 +48,7 @@ const Settings = ({ navigation, route }) => {
     wifi: false,
   });
 
-  const username = route.params.username
-  const current_username = route.params.current_username
-  // console.log('username', username);
-  // console.log('current_username', current_username);
-  // const [name, setName] = useState(username); // account name
-  const [questions, setQuestions] = useState([]); // array of past questions answered
-  const [likes, setLikes] = useState(0); // number of likes user has gotten
-  const [isFollowing, setIsFollowing] = useState(false);
+  const {username, location} = route.params
   const [profilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
@@ -73,11 +67,7 @@ const Settings = ({ navigation, route }) => {
   return (
     <View style={styles.container2}>
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfilePage', {
-                                          username: username, 
-                                          current_username: current_username,
-                                          isDefaultUser: false,
-                                        })}>
+        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
           <View style={styles.backArrowContainer}>
             <Image source={require('../assets/icons/back_arrow_icon.png')}
               style={styles.backArrow} />
@@ -85,7 +75,7 @@ const Settings = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {
                                           username: username, 
-                                          current_username: current_username,
+                                          current_username: username,
                                           isDefaultUser: false,
                                         })}>
           <View style={styles.editProfileContainer}>
@@ -96,12 +86,12 @@ const Settings = ({ navigation, route }) => {
             <View style={styles.moreInfoContainer}>
               <View style={styles.usernameContainer}>
                 <Text style={styles.username}>
-                  amour123
+                  {username}
                 </Text>
               </View>
               <View style={styles.locationContainer}>
                 <Text style={styles.location}>
-                  los angeles, california
+                  {location}
                 </Text>
               </View>
             </View>

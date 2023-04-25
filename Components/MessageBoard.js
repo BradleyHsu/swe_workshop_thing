@@ -403,11 +403,18 @@ const MessageBoard = ({ navigation, route }) => {
                     <View style={styles.furtherInfo}>
                       <Text style={styles.username} onPress={
                         () => {
-                          navigation.navigate('Profile Page', {
-                            username: message.userID,
-                            current_username: username,
-                            isDefaultUser: false,
-                          });
+                          if(message.userID === username){
+                            navigation.navigate('Profile Page',{
+                              username: username
+                            });
+                          }
+                          else{
+                            navigation.navigate('OtherProfilePage', {
+                              username: message.userID,
+                              current_username: username,
+                              isDefaultUser: false,
+                            });
+                          }
                         }
                       }>{message.userID}</Text>
                       <View style={styles.subsetMessage}>
