@@ -21,6 +21,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { decode, encode } from 'base-64';
 import Settings from './Components/Settings';
 import CalView from './Components/CalView';
+import { registerAppWithFCM } from './PushNotificationManager';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -101,6 +102,9 @@ function App() {
   const [promptTextC, setPromptTextC] = useState('');
   const [promptDateC, setPromptDateC] = useState(0);
   const [inputTextC, setInputTextC] = useState('');
+  useEffect(() => {
+    registerAppWithFCM();
+  }, []);
   return (
     <AppContext.Provider value={{ usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, inputTextC, setInputTextC, promptDateC, setPromptDateC }}>
       <NavigationContainer>

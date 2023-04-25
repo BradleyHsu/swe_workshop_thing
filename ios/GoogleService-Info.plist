@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>540391049912-5apv9ro5ogq0n12bh4i38ob0apa6lfb0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.540391049912-5apv9ro5ogq0n12bh4i38ob0apa6lfb0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDNuOKmoY2jhfD8oW8vRhweaSHM2mpeQNM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>540391049912</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.chalk2</string>
+	<key>PROJECT_ID</key>
+	<string>chalk-2c91e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chalk-2c91e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:540391049912:ios:2f7d8d3052b441684d824d</string>
+	<key>DATABASE_URL</key>
+	<string>https://chalk-2c91e-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
