@@ -23,6 +23,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import { MenuProvider } from 'react-native-popup-menu';
+import { BlurView } from "@react-native-community/blur";
 
 const theme = createTheme({
   lightColors: {
@@ -502,9 +503,36 @@ const MessageBoard = ({ navigation, route }) => {
               ))}
             </View>}
             {!hasResponded && <View>
-              <Text >
-                Need to respond to prompt first!
-              </Text>
+              <View style={styles.backDrop}>
+                <TouchableOpacity onPress={() => { navigation.navigate('create') }}>
+                  <View style={styles.eyeContainer}>
+                    <Image style={styles.eye} source={require('../assets/icons/privacy_icon.png')} />
+                  </View>
+                  <Text style={styles.respondFirst}>
+                    Post to View!
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.backDrop2}>
+                <TouchableOpacity onPress={() => { navigation.navigate('create') }}>
+                  <View style={styles.eyeContainer}>
+                    <Image style={styles.eye} source={require('../assets/icons/privacy_icon.png')} />
+                  </View>
+                  <Text style={styles.respondFirst}>
+                    Post to View!
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.backDrop2}>
+                <TouchableOpacity onPress={() => { navigation.navigate('create') }}>
+                  <View style={styles.eyeContainer}>
+                    <Image style={styles.eye} source={require('../assets/icons/privacy_icon.png')} />
+                  </View>
+                  <Text style={styles.respondFirst}>
+                    Post to View!
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>}
           </ScrollView>
           {/* <View style={styles.inputContainer}>
@@ -701,6 +729,34 @@ const styles = StyleSheet.create({
     fontFamily: 'InriaSans-Regular',
     marginLeft: 55,
     marginTop: -19,
+  },
+  backDrop: {
+    backgroundColor: '#F1F1F1',
+    height: 200,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  backDrop2: {
+    backgroundColor: '#F1F1F1',
+    height: 200,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 20,
+  },
+  eye: {
+    width: 50,
+    height: 50,
+    opacity: 0.6,
+  },
+  eyeContainer: {
+    marginLeft: 135,
+    marginTop: 50,
+  },
+  respondFirst: {
+    color: '#6A6A6A',
+    fontSize: 13,
+    fontFamily: 'InriaSans-Regular',
+    textAlign: 'center',
   },
   editImage: {
     width: 25,
