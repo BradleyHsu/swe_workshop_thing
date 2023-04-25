@@ -17,7 +17,49 @@ const EditProfile = ({ navigation, route }) => {
       setProfilePicture(pic);
     });
   }, [username, profilePicture]);
-  
+  // console.log('username', username);
+  // console.log('current_username', current_username);
+  // const [name, setName] = useState(username); // account name
+  const [questions, setQuestions] = useState([]); // array of past questions answered
+  const [likes, setLikes] = useState(0); // number of likes user has gotten
+  const [isFollowing, setIsFollowing] = useState(false);
+
+
+  // useEffect(() => {
+  //   setName(username)
+  //   db_operations.getKarma(username).then(karma => {
+  //     setLikes(karma)
+  //   });
+  //   let timerId = setInterval(() => {
+  //     db_operations.getKarma(username).then(karma => {
+  //       setLikes(karma)
+  //     });
+  //   }, 5000);
+  //   const checkFollowingStatus = async () => {
+  //     const isUserFollowing = await db_operations.isFollowing(current_username, username);
+  //     setIsFollowing(isUserFollowing);
+
+  //   };
+  //   checkFollowingStatus();
+  //   return () => clearInterval(timerId);
+  // }, [username, current_username, likes]);
+
+  // const handleNameChange = (text) => {
+  //   setName(text);
+  // }
+
+  // const handleLogout = () => {
+  //   navigation.navigate('Home')
+  // }
+  // const handleFollow = async () => {
+  //   if (isFollowing) {
+  //     await db_operations.unfollowUser(current_username, username);
+  //   } else {
+  //     await db_operations.followUser(current_username, username);
+  //   }
+  //   setIsFollowing(!isFollowing);
+  // };
+
   const handleProfilePictureChange = async () => {
     const options = {
       mediaType: 'photo',
@@ -38,6 +80,7 @@ const EditProfile = ({ navigation, route }) => {
           console.log("base64Image", base64Image)
           setProfilePicture(base64Image)
           console.log("after change", profilePicture)
+          await db_operations.setProfilePic(username, base64Image);
           setIsProfilePictureChanged(true)
         } else {
           Alert.alert("Picture too large, cannot set profile picture.")
@@ -100,6 +143,7 @@ const EditProfile = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       </View>
+
       {/* <TouchableOpacity onPress={()=>console.log(username)}>
       <View style={styles.usernameContainer}>
         <View style={styles.usernameTagContainer} >

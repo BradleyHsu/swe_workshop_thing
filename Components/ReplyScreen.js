@@ -56,6 +56,7 @@ const ReplyScreen = ({ route, navigation }) => {
     }
 
     setResponse(responseText);
+    console.log("getting comments", responseID)
     db_operations.getComments(responseID).then(comments => {
       setComments(comments);
       fetchProfilePics(comments);
@@ -118,11 +119,25 @@ const ReplyScreen = ({ route, navigation }) => {
     setMessages(new_messages)
 
   }
+  const handleReply = (responseText, commentID, userID) => {
+    if ([responseText, responseID, userID].includes(undefined)) {
+      console.error("got undefined in handleReply")
+    }
+    db_operations.getResponses(promptID).then(() => {
+      navigation.push('ReplyScreen', {
+        responseText: responseText,
+        promptID: responseID,
+        responseID: commentID,
+        userID: userID,
+        username: username,
+      });
+    });
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('MessageBoard')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <View style={styles.iconContainer}>
             <Image
               style={styles.icon}
@@ -144,7 +159,7 @@ const ReplyScreen = ({ route, navigation }) => {
                 </View>
                 <View style={styles.moreInfo}>
                   <Text style={styles.username}>
-                    surferdude123
+                    {route.params.userID}
                   </Text>
                   <Text style={styles.location}>
                     1 hr
@@ -231,6 +246,7 @@ const ReplyScreen = ({ route, navigation }) => {
                     source={require('../assets/icons/threedots_icon.png')}
                   />
                 </View>
+                <TouchableOpacity onPress={() => handleReply(comment.text, comment.commentID, comment.userID)}>
                 <View style={styles.replyContainer}>
                   <Image
                     style={styles.reply}
@@ -240,6 +256,7 @@ const ReplyScreen = ({ route, navigation }) => {
                 <View style={styles.replyNumContainer}>
                   <Text style={styles.replyNum}>Reply</Text>
                 </View>
+                </TouchableOpacity>
                 <View style={styles.thumbsUpContainer}>
                   <Image
                     style={styles.thumbsUp}

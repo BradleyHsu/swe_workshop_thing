@@ -158,6 +158,7 @@ function getComments(responseID) {
             commentID: obj.commentID,
             likeCount: obj.likeCount,
             timestamp: obj.timestamp,
+            replyCount: obj.replyCount ? obj.replyCount : 0,
           })),
         );
       } else {
@@ -189,8 +190,8 @@ function respondToPrompt(userID, text, promptID) {
   return responseID;
 }
 
-function replyToResponse(userID, text, promptID, responseID) {
-  console.debug('replyToResponse', userID, text, responseID)
+function replyToResponse(userID, text, promptID, responseID, isComment=false) {
+  console.debug('replyToResponse', userID, text, promptID, responseID)
   //add commentID to comment responses
   //add comment to comments
   const commentRef = ref(db, `comments/${responseID}`);
@@ -203,11 +204,10 @@ function replyToResponse(userID, text, promptID, responseID) {
   });
   const commentID = newComment.key;
   update(newComment, { commentID: commentID });
-  //TODO SEE IF THIS WORKS
-  const responsesRef = getResponseRef(promptID, responseID)
+  const responsesRef = isComment ? getCommentRef(promptID, responseID) : getResponseRef(promptID, responseID)
   get(responsesRef).then(snapshot => {
     if (snapshot.exists()) {
-      update(responsesRef, {replyCount: snapshot.val().replyCount + 1})
+      update(responsesRef, {replyCount: snapshot.val().replyCount ? snapshot.val().replyCount + 1 : 0})
       // return Promise.resolve(snapshot.val())
     } else {
       update(responsesRef, {replyCount: 0})
@@ -218,6 +218,11 @@ function replyToResponse(userID, text, promptID, responseID) {
       return Promise.reject(error);
     });
   
+}
+
+function getCommentRef(promptID, responseID) {
+  console.debug('getCommentRef', promptID, responseID)
+  return ref(db, `comments/${promptID}/${responseID}`)
 }
 
 function getResponseRef(promptID, responseID) {
