@@ -34,11 +34,9 @@ const Tab = createBottomTabNavigator();
 const MessageBoardStack = createNativeStackNavigator();
 const CommentStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
-const DiscoverStack = createNativeStackNavigator();
 
 import AppContext from './AppContext';
 import QOTD from './Components/QOTD';
-import Discover from './Components/Discover';
 import SubmitPrompt from './Components/SubmitPrompt';
 import About from './Components/About';
 import Help from './Components/Help';
@@ -77,15 +75,6 @@ function CommentTabStack({ route: { params } }) {
   )
 }
 
-function DiscoverTabStack({ route: { params } }) {
-  return (
-    <DiscoverStack.Navigator initalRouteName="Discover">
-      <DiscoverStack.Screen name="Discover" component={Discover} options={{ headerShown: false }} initialParams={params} />
-      <DiscoverStack.Screen name="OtherProfile" component={ProfilePage} initialParams={params} options={{ headerShown: false }} />
-    </DiscoverStack.Navigator>
-  )
-}
-
 function MessageBoardTabs({ route: { params } }) {
   const { username: currentUser } = params;
   return (
@@ -94,12 +83,6 @@ function MessageBoardTabs({ route: { params } }) {
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <Icon name="home" color={color} size={size} />
-        ),
-      }} />
-      <Tab.Screen name="discover" component={DiscoverTabStack} initialParams={{username: currentUser}} options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="search" color={color} size={size} />
         ),
       }} />
       <Tab.Screen name="create" component={CommentTabStack} initialParams={params} options={{
