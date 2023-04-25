@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
 import * as db_operations from '../db_operations.js';
 import {launchImageLibrary} from 'react-native-image-picker';
-
+import { StackActions } from '@react-navigation/native';
 
 const EditProfile = ({ navigation, route }) => {
-  const username = route.params.username;
-  const current_username = route.params.current_username;
+  const {username, location, bio} = route.params
   const [profilePicture, setProfilePicture] = useState(null);
+  const [updatedUsername, setUpdatedUsername] = useState(username)
+  const [updatedBio, setUpdatedBio] = useState(bio)
+  const [updatedLocation, setUpdatedLocation] = useState(location)
+  const [isProfilePictureChanged, setIsProfilePictureChanged] = useState(false)
   
   useEffect(() => {
     db_operations.getProfilePic(username).then(pic => {
       setProfilePicture(pic);
     });
-  }, [username]);
+  }, [username, profilePicture]);
   // console.log('username', username);
   // console.log('current_username', current_username);
   // const [name, setName] = useState(username); // account name
@@ -78,34 +81,46 @@ const EditProfile = ({ navigation, route }) => {
           setProfilePicture(base64Image)
           console.log("after change", profilePicture)
           await db_operations.setProfilePic(username, base64Image);
+          setIsProfilePictureChanged(true)
         } else {
           Alert.alert("Picture too large, cannot set profile picture.")
         }
       }
     });
   };
+  const handleUsernameChange = (text) => {
+      setUpdatedUsername(text)
+  }
+
+  const handleSave = async() => {
+    //TODO: add ability to save username/prof picture
+    if(isProfilePictureChanged){
+      setIsProfilePictureChanged(false)
+      await db_operations.setProfilePic(username, base64Image);
+    }
+    if(location !== updatedLocation){
+      db_operations.updateLocation(username, updatedLocation)
+    }
+    if(bio !== updatedBio){
+      db_operations.updateBio(username, updatedBio)
+    }
+    navigation.dispatch(StackActions.pop(2))
+    
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfilePage', {
-                                                username: username, 
-                                                current_username: current_username,
-                                                isDefaultUser: false,
-                                              })}>
+        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.pop(1))}>
           <Image
             style={styles.icon}
-            source={{uri: "data:image/png;base64," + profilePicture}}
+            source={require('../assets/icons/back_arrow_icon.png')}
           />
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          onPress={() => navigation.navigate('ProfilePage', {
-            username: username, 
-            current_username: current_username,
-            isDefaultUser: false,
-          })}
+          onPress={() => handleSave()}
           color="#464646"
           title="Save"
           fontFamily="Arial"
@@ -128,7 +143,8 @@ const EditProfile = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={()=>console.log(username)}>
+
+      {/* <TouchableOpacity onPress={()=>console.log(username)}>
       <View style={styles.usernameContainer}>
         <View style={styles.usernameTagContainer} >
           <Text style={styles.usernameTag}>
@@ -136,12 +152,12 @@ const EditProfile = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={styles.usernameEditContainer}>
-          <Text style={styles.usernameEdit}>
-            amour123
-          </Text>
+          <TextInput style={styles.usernameEdit} onChangeText={text => setUpdatedUsername(text)}>
+            {updatedUsername}
+          </TextInput>
         </View>
       </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={styles.bioContainer}>
         <View style={styles.bioContainerBold} >
           <Text style={styles.bio}>
@@ -149,9 +165,9 @@ const EditProfile = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={styles.bioTextContainer}>
-          <Text style={styles.bioText}>
-            i am a cool person.
-          </Text>
+          <TextInput style={styles.bioText} onChangeText={text => setUpdatedBio(text)}>
+            {updatedBio}
+          </TextInput>
         </View>
       </View>
       <View style={styles.locationMainContainer}>
@@ -161,9 +177,9 @@ const EditProfile = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={styles.locationContainer}>
-          <Text style={styles.location}>
-            los angeles, ca
-          </Text>
+          <TextInput style={styles.location} onChangeText={text => setUpdatedLocation(text)}>
+            {updatedLocation}
+          </TextInput>
         </View>
       </View>
       {/* {username === current_username &&
@@ -200,9 +216,10 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   icon: {
-    width: 18,
-    height: 18,
+    width: 30,
+    height: 30,
     opacity: 0.4,
+    
   },
   cameraIcon: {
     width: 20,
