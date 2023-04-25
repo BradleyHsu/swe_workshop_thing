@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
 import * as db_operations from '../db_operations.js';
 import {launchImageLibrary} from 'react-native-image-picker';
 
@@ -10,22 +10,10 @@ const EditProfile = ({ navigation, route }) => {
   const [profilePicture, setProfilePicture] = useState(null);
   
   useEffect(() => {
-    const fetchProfilePicture = async () => {
-      const [profilePicBase64] = await db_operations.getProfilePic(username);
-      console.log("got pic 123", profilePicBase64);
-      if (profilePicBase64) {
-        setProfilePicture(profilePicBase64);
-      } else {
-
-        setProfilePicture(require('../assets/images/dog_picture.jpg'));
-      }
-      console.log("default profile pic", profilePicture);
-    };
-
-    fetchProfilePicture();
+    db_operations.getProfilePic(username).then(pic => {
+      setProfilePicture(pic);
+    });
   }, [username]);
-  console.log("edit profile username: ", username)
-  console.log("edit profile current_username ", current_username)
   // console.log('username', username);
   // console.log('current_username', current_username);
   // const [name, setName] = useState(username); // account name
@@ -84,11 +72,15 @@ const EditProfile = ({ navigation, route }) => {
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else {
-        const base64Image = response.assets[0].base64;
-        console.log("base64Image", base64Image)
-        setProfilePicture(base64Image)
-        console.log("after change", profilePicture)
-        await db_operations.setProfilePic(username, base64Image);
+        if (response.assets[0].hasOwnProperty('base64')) {
+          const base64Image = response.assets[0].base64;
+          console.log("base64Image", base64Image)
+          setProfilePicture(base64Image)
+          console.log("after change", profilePicture)
+          await db_operations.setProfilePic(username, base64Image);
+        } else {
+          Alert.alert("Picture too large, cannot set profile picture.")
+        }
       }
     });
   };
@@ -103,7 +95,7 @@ const EditProfile = ({ navigation, route }) => {
                                               })}>
           <Image
             style={styles.icon}
-            source={require('../assets/images/x-icon.png')}
+            source={{uri: "data:image/png;base64," + profilePicture}}
           />
         </TouchableOpacity>
       </View>
@@ -136,6 +128,7 @@ const EditProfile = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={()=>console.log(username)}>
       <View style={styles.usernameContainer}>
         <View style={styles.usernameTagContainer} >
           <Text style={styles.usernameTag}>
@@ -148,6 +141,7 @@ const EditProfile = ({ navigation, route }) => {
           </Text>
         </View>
       </View>
+      </TouchableOpacity>
       <View style={styles.bioContainer}>
         <View style={styles.bioContainerBold} >
           <Text style={styles.bio}>
