@@ -75,6 +75,7 @@ function DiscoverTabStack({ route: { params } }) {
   return (
     <DiscoverStack.Navigator initalRouteName="Discover">
       <DiscoverStack.Screen name="Discover" component={Discover} options={{ headerShown: false }} initialParams={params} />
+      <DiscoverStack.Screen name="OtherProfile" component={ProfilePage} initialParams={params} options={{ headerShown: false }} />
     </DiscoverStack.Navigator>
   )
 }
@@ -89,7 +90,7 @@ function MessageBoardTabs({ route: { params } }) {
           <Icon name="home" color={color} size={size} />
         ),
       }} />
-      <Tab.Screen name="discover" component={DiscoverTabStack} initialParams={params} options={{
+      <Tab.Screen name="discover" component={DiscoverTabStack} initialParams={{username: currentUser}} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <Icon name="search" color={color} size={size} />
