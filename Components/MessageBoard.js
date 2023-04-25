@@ -297,14 +297,12 @@ const MessageBoard = ({ navigation, route }) => {
     if ([responseText, responseID, userID].includes(undefined)) {
       console.error("got undefined in handleReply")
     }
-    db_operations.getResponses(promptID).then(() => {
-      navigation.navigate('ReplyScreen', {
-        responseText: responseText,
-        promptID: promptID,
-        responseID: responseID,
-        userID: userID,
-        username: username,
-      });
+    navigation.navigate('ReplyScreen', {
+      responseText: responseText,
+      promptID: promptID,
+      responseID: responseID,
+      userID: userID,
+      username: username,
     });
   };
 

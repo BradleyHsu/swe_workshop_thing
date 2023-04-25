@@ -73,11 +73,7 @@ const Settings = ({ navigation, route }) => {
   return (
     <View style={styles.container2}>
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfilePage', {
-                                          username: username, 
-                                          current_username: current_username,
-                                          isDefaultUser: false,
-                                        })}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <View style={styles.backArrowContainer}>
             <Image source={require('../assets/icons/back_arrow_icon.png')}
               style={styles.backArrow} />
