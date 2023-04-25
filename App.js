@@ -95,9 +95,10 @@ function App() {
   const [usernameC, setUsernameC] = useState('');
   const [promptIDC, setPromptIDC] = useState('');
   const [promptTextC, setPromptTextC] = useState('');
+  const [promptDateC, setPromptDateC] = useState(0);
   const [inputTextC, setInputTextC] = useState('');
   return (
-    <AppContext.Provider value={{ usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, inputTextC, setInputTextC }}>
+    <AppContext.Provider value={{ usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, inputTextC, setInputTextC, promptDateC, setPromptDateC }}>
       <NavigationContainer>
         <Stack.Navigator initalRouteName="Home">
           <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />

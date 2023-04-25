@@ -11,6 +11,7 @@ import {
 import AppContext from '../AppContext';
 import * as db_operations from '../db_operations.js';
 import { ThemeProvider, createTheme } from '@rneui/themed';
+import Clock from './Clock';
 const theme = createTheme({
   lightColors: {
     primary: '#979797',
@@ -42,16 +43,48 @@ const CommentPage = ({ navigation, route }) => {
   const [imageUri, setImageUri] = useState('');
   const [voiceMemoUri, setVoiceMemoUri] = useState('');
   const [characterCount, setCharacterCount] = useState(0);
-  const { usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, inputTextC, setInputTextC } = useContext(AppContext);
+  const { usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, inputTextC, setInputTextC, promptDateC, setPromptDateC } = useContext(AppContext);
   const { isEditing, messageText } = route.params;
   const [edit, setEdit] = useState(isEditing)
-  console.log('test', messageText)
+  const [time, setTime] = useState(null)
+  const [currentTime, setCurrentTime] = useState(null);
+
+  const formatTime = (time, offset) => {
+    const adjustedTime = time-offset
+    const seconds = Math.floor(adjustedTime / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days}d ${hours % 24}h late`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes % 60}m late`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s late`;
+    } else if (seconds > 0){
+      return `${seconds}s late`;
+    } else if (minutes < 0){
+      return `${-minutes}m ${-seconds % 60}s remain`;
+    } else {
+      return `${-seconds}s remain`;
+    }
+  };
+
   useEffect(() => {
     if (edit) {
       setText(messageText)
       setEdit(false)
     }
-  })
+    const intervalId = setInterval(() => {
+      const today = new Date();
+      const seconds = today.getSeconds() < 10 ? '0'+today.getSeconds() : today.getSeconds()
+      setTime(today.getHours() + ":" + today.getMinutes() + ":" + seconds);
+      setCurrentTime(Date.now() -  promptDateC);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  },[time])
 
 
   const handlePost = async () => {
@@ -76,9 +109,10 @@ const CommentPage = ({ navigation, route }) => {
     <ThemeProvider>
       <View style={styles.container}>
         <View style={styles.iconContainer}>
-          {/* <Text style={styles.timeText}>
-            18:13:24 - 2 hrs late
-          </Text> */}
+
+          <Text style={styles.timeText}>
+            {time + ' - ' + formatTime(currentTime, 300000)}
+          </Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handlePost}>
               <Image
@@ -88,6 +122,7 @@ const CommentPage = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+        
         <View style={styles.promptTextView}>
           <Text style={styles.promptText}>{promptTextC}</Text>
         </View>

@@ -58,7 +58,7 @@ const MessageBoard = ({ navigation, route }) => {
   const SORTBYOLD = 3
   const [sortType, setSortType] = useState(SORTBYTOP)
   const { username } = route.params;
-  const { usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC } = useContext(AppContext);
+  const { usernameC, setUsernameC, promptIDC, setPromptIDC, promptTextC, setPromptTextC, promptDateC, setPromptDateC } = useContext(AppContext);
   const [refreshing, setRefreshing] = useState(false);
   
 
@@ -103,6 +103,7 @@ const MessageBoard = ({ navigation, route }) => {
       setPromptTextC(promptText);
       setUsernameC(username);
       setPromptDate(promptDate);
+      setPromptDateC(promptDate)
     });
 
   }, [usernameC, promptIDC, promptTextC, showFollowing]);
@@ -321,7 +322,6 @@ const MessageBoard = ({ navigation, route }) => {
             source={require('../assets/images/chalk_logo.png')}
           />
         </View>
-        <Clock timestamp={promptDate} />
         <View style={styles.header}>
           <Text style={styles.qotd}>Question of the Day: </Text>
           <Text style={styles.logo}>{promptText}</Text>

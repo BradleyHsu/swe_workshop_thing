@@ -6919,7 +6919,7 @@ react-native-gesture-handler@^2.9.0:
 
 react-native-gifted-chat@^2.0.1:
   version "2.0.1"
-  resolved "https://registry.npmjs.org/react-native-gifted-chat/-/react-native-gifted-chat-2.0.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-gifted-chat/-/react-native-gifted-chat-2.0.1.tgz#6d7cc7a8cb884a53bff608dcb6a0becc690d9a34"
   integrity sha512-3cXMmKp4tJ7sbWEz9wKFV3coELkfI8RsK0ZC/hR9S6vJlHyCLwTK0r3UaOX1/aXP3PLG9uvjygpzFe3qeeUUmw==
   dependencies:
     "@expo/react-native-action-sheet" "4.0.1"
