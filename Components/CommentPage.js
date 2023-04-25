@@ -169,9 +169,11 @@ const CommentPage = ({ navigation, route }) => {
 
         {
           hasResponded && <View>
-            <Text style={styles.alrResponsed}>
-              You have already responded to this prompt.
-            </Text>
+            <View style={styles.alrRespondedContainer}>
+              <Text style={styles.alrResponded}>
+                You have already responded to this prompt for today. Come back tomorrow! :)
+              </Text>
+            </View>
           </View>
         }
 
@@ -223,14 +225,15 @@ const styles = StyleSheet.create({
     opacity: 0.35,
   },
   timeContainer: {
-
+    marginRight: 70,
+    marginLeft: 70,
   },
   timeText: {
-    paddingLeft: 95,
     color: theme.createCommentColors.third,
     fontSize: 15,
     fontFamily: 'InriaSans-Bold',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 100,
@@ -241,8 +244,17 @@ const styles = StyleSheet.create({
     height: 90,
     width: 100,
   },
-  alrResponsed: {
-
+  alrResponded: {
+    textAlign: 'center',
+    color: '#D91D1D',
+    fontFamily: 'InriaSans-BoldItalic',
+    fontSize: 24,
+    marginTop: 150,
+  },
+  alrRespondedContainer: {
+    marginTop: 100,
+    marginLeft: 30,
+    marginRight: 30,
   },
   postText: {
     fontSize: 11,
