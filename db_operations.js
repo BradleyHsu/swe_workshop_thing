@@ -69,6 +69,23 @@ function reportComment(responseID, commentID) {
   })
 }
 
+function getUsers() {
+  console.debug("getUsers called")
+  return new Promise((resolve, reject) => {
+    const dbRef = ref(db);
+    get(child(dbRef, 'users'))
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          resolve(snapshot.val());
+        } else {
+          reject('No user data available');
+        }
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+}
 
 //get all prompts
 function getPrompts() {
@@ -717,4 +734,5 @@ export {
   decrementLikeComment,
   handleLikeComment,
   handleDislikeComment,
+  getUsers,
 };
