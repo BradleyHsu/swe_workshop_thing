@@ -419,17 +419,17 @@ const MessageBoard = ({ navigation, route }) => {
                     <View style={styles.headerMessage}>
                       <Image
                         style={styles.profPicture}
-                        source={{uri: "data:image/png;base64," + profilePics[message.userID]}}
+                        source={{ uri: "data:image/png;base64," + profilePics[message.userID] }}
                       />
                       <View style={styles.furtherInfo}>
                         <Text style={styles.username} onPress={
                           () => {
-                            if(message.userID === username){
-                              navigation.navigate('Profile Page',{
+                            if (message.userID === username) {
+                              navigation.navigate('Profile Page', {
                                 username: username
                               });
                             }
-                            else{
+                            else {
                               navigation.navigate('OtherProfilePage', {
                                 username: message.userID,
                                 current_username: username,
@@ -451,9 +451,9 @@ const MessageBoard = ({ navigation, route }) => {
                           <MenuTrigger text='•••' customStyles={styles.threeDots} />
                           <MenuOptions>
                             <MenuOption onSelect={() => {
-                                                    db_operations.reportResponse(promptID, message.responseID);
-                                                    alert(`Reported`);
-                                                    }} >
+                              db_operations.reportResponse(promptID, message.responseID);
+                              alert(`Reported`);
+                            }} >
                               <Text style={{ color: 'red' }}>Report</Text>
                             </MenuOption>
                           </MenuOptions>
@@ -502,10 +502,10 @@ const MessageBoard = ({ navigation, route }) => {
               ))}
             </View>}
             {!hasResponded && <View>
-                <Text>
-                  Need to respond to prompt first!
-                </Text>
-              </View>}
+              <Text >
+                Need to respond to prompt first!
+              </Text>
+            </View>}
           </ScrollView>
           {/* <View style={styles.inputContainer}>
             <TextInput

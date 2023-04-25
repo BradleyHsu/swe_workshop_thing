@@ -145,7 +145,7 @@ const CommentPage = ({ navigation, route }) => {
             />
           </TouchableOpacity>
   </View> */}
-      
+
         {!hasResponded && <View style={styles.charContainer}>
           <Text style={styles.char}> {characterCount}/300</Text>
         </View>}
@@ -169,12 +169,12 @@ const CommentPage = ({ navigation, route }) => {
 
         {
           hasResponded && <View>
-            <Text>
+            <Text style={styles.alrResponsed}>
               You have already responded to this prompt.
             </Text>
-            </View>
+          </View>
         }
-        
+
         {/* <TouchableOpacity style={styles.imagePickerButton} onPress={handleImage}>
         <Text>Add Photo</Text>
       </TouchableOpacity>
@@ -240,6 +240,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 90,
     width: 100,
+  },
+  alrResponsed: {
+
   },
   postText: {
     fontSize: 11,
