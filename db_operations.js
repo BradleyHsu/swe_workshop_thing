@@ -62,6 +62,13 @@ function setUsername(username, userCredential) {
   });
 }
 
+async function updateUsername(prevUsername, newUsername){
+  const userObj = await getUser(prevUsername);
+  const userRef = await getUserRef(prevUsername);
+  userObj.username = newUsername
+  update(userRef, userObj)
+}
+
 function getUsername(email) {
   console.debug("getUsername", email)
   return new Promise((resolve, reject) => {
@@ -408,6 +415,74 @@ async function followUser(username, targetUsername) {
   }
 }
 
+async function getFollowingCount(username){
+  const following = await getFollowing(username)
+  return following.length
+}
+
+async function updateLocation(username, location){
+  const userObj = await getUser(username);
+  const userRef = await getUserRef(username);
+  userObj.location = location
+  update(userRef, userObj)
+}
+
+async function getLocation(username){
+  const userObj = await getUser(username);
+  if (userObj.hasOwnProperty("location")) {
+    return userObj.location
+  } else {
+    return 'No User Location Set'
+  }
+}
+
+async function updateBio(username, bio){
+  const userObj = await getUser(username);
+  const userRef = await getUserRef(username);
+  userObj.bio = bio
+  update(userRef, userObj)
+}
+
+async function getBio(username){
+  const userObj = await getUser(username);
+  if (userObj.hasOwnProperty("bio")) {
+    return userObj.bio
+  } else {
+    return 'No User Bio Set'
+  }
+}
+
+async function getFollowerCount(username){
+  var followerCount = 0
+  const thisUserID = await getUserIDByUsername(username)
+  const dbRef = ref(db);
+  return get(child(dbRef, `users`))
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        const users = snapshot.val();
+        for (const userID in users) {
+          const user = users[userID];
+          if(!user.following){
+            continue;
+          }
+          for(const followingUserID of user.following){
+            if (followingUserID === thisUserID) {
+              followerCount++;
+            }
+          }
+        }
+        console.log('FOLLOWER COUNT: ', followerCount)
+        return followerCount;
+      } else {
+        console.error('No user data available');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+ 
+}
+
 async function unfollowUser(username, targetUsername) {
   const userObj = await getUser(username);
   const userRef = await getUserRef(username);
@@ -424,7 +499,6 @@ async function getProfilePic(username) {
   const userObj = await getUser(username);
 
   if (userObj.hasOwnProperty('profilepic')) {
-    console.log("got pic", userObj.profilepic);
     return userObj.profilepic;
   } else {
     // Load the default picture and convert it to base64
@@ -480,5 +554,12 @@ export {
   followUser,
   unfollowUser,
   getProfilePic,
-  setProfilePic
+  setProfilePic,
+  getFollowingCount,
+  getFollowerCount,
+  updateLocation,
+  getLocation,
+  updateBio,
+  getBio,
+  updateUsername,
 };
